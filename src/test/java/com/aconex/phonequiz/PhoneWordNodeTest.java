@@ -26,8 +26,8 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldBuildPhoneWordNodeCorrectly() {
-        root.addWord("AA", 0);
-        root.addWord("ABA", 0);
+        root.addWord("AA");
+        root.addWord("ABA");
 
         assertChildrenAreNullExcept(root, Arrays.asList(2));
 
@@ -51,10 +51,10 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldFindSingleWord() {
-        root.addWord("AA", 0);
-        root.addWord("ABA", 0);
+        root.addWord("AA");
+        root.addWord("ABA");
 
-        List<List<String>> result = root.findWords("22", 0, root);
+        List<List<String>> result = root.findWordsNoSkip("22");
 
         assertThat(result.size(), is(1));
         assertThat(result.get(0), hasItem("AA"));
@@ -62,10 +62,10 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldFindTwoWords() {
-        root.addWord("DDD", 0); // both mapped to 4
-        root.addWord("EEE", 0);
+        root.addWord("DDD"); // both mapped to 4
+        root.addWord("EEE");
 
-        List<List<String>> result = root.findWords("444", 0, root);
+        List<List<String>> result = root.findWordsNoSkip("444");
         assertThat(result.size(), is(2));
         assertThat(result.get(0), hasItem("DDD"));
         assertThat(result.get(1), hasItem("EEE"));
@@ -73,10 +73,10 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldFindTwoWordsPhrase() {
-        root.addWord("AA", 0);
-        root.addWord("BB", 0);
+        root.addWord("AA");
+        root.addWord("BB");
 
-        List<List<String>> result = root.findWords("2233", 0, root);
+        List<List<String>> result = root.findWordsNoSkip("2233");
         assertThat(result.size(), is(1));
         assertThat(result.get(0), hasItems("AA", "BB"));
 
@@ -84,22 +84,22 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldFindThreeWordsPhrase() {
-        root.addWord("AA", 0);
-        root.addWord("BB", 0);
-        root.addWord("CC", 0);
+        root.addWord("AA");
+        root.addWord("BB");
+        root.addWord("CC");
 
-        List<List<String>> result = root.findWords("223344", 0, root);
+        List<List<String>> result = root.findWordsNoSkip("223344");
         assertThat(result.size(), is(1));
         assertThat(result.get(0), hasItems("AA", "BB", "CC"));
     }
 
     @Test
     public void shouldFindTwoPhrases() {
-        root.addWord("AA", 0);
-        root.addWord("CC", 0);
-        root.addWord("DD", 0);
+        root.addWord("AA");
+        root.addWord("CC");
+        root.addWord("DD");
 
-        List<List<String>> result = root.findWords("2244", 0, root);
+        List<List<String>> result = root.findWordsNoSkip("2244");
         assertThat(result.size(), is(2));
         assertThat(result.get(0), hasItems("AA", "CC"));
         assertThat(result.get(1), hasItems("AA", "DD"));
@@ -107,22 +107,22 @@ public class PhoneWordNodeTest {
 
     @Test
     public void shouldSupportSkippingOneDigit() {
-        root.addWord("AA", 0);
-        root.addWord("BB", 0);
+        root.addWord("AA");
+        root.addWord("BB");
 
-        assertThat(root.findWords("22433", 0, root).size(), is(0));
+        assertThat(root.findWordsNoSkip("22433").size(), is(0));
 
-        List<List<String>> result = root.findWords("22433", 0, root, true);
+        List<List<String>> result = root.findWordsAllowSkip("22433");
         assertThat(result.size(), is(1));
         assertThat(result.get(0), hasItems("AA", "4", "BB"));
     }
 
     @Test
     public void shouldNotGetErrorWhenMatchingEmptyNumber() {
-        root.addWord("AA", 0);
-        root.addWord("BB", 0);
+        root.addWord("AA");
+        root.addWord("BB");
 
-        assertThat(root.findWords("", 0, root).size(), is(0));
+        assertThat(root.findWordsNoSkip("").size(), is(0));
     }
 
 

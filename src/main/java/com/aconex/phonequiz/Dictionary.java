@@ -20,9 +20,9 @@ public class Dictionary {
 
     public List<String> findPhoneWords(String number) {
         String realNumber = cleanNumber(number);
-        List<List<String>> candidates = root.findWords(realNumber, 0, root);
+        List<List<String>> candidates = root.findWordsNoSkip(realNumber);
         if (candidates.isEmpty()) {
-            candidates = root.findWords(realNumber, 0, root, true);
+            candidates = root.findWordsAllowSkip(realNumber);
         }
 
         return candidates.stream()
@@ -38,7 +38,7 @@ public class Dictionary {
         words.map(this::cleanWord)
                 .filter(word -> !word.isEmpty() && !wordSet.contains(word))
                 .forEach(word -> {
-                    root.addWord(word, 0);
+                    root.addWord(word);
                     wordSet.add(word);
                 });
     }
