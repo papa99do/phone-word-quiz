@@ -30,24 +30,32 @@ public class PhoneWordNode {
     }
 
     public List<List<String>> findWords(String number, int level, PhoneWordNode rootNode) {
-        List<List<String>> result = new ArrayList<>();
+        return findWords(number, level, rootNode, false);
+    }
+
+    public List<List<String>> findWords(String number, int level, PhoneWordNode rootNode, boolean skipOneDigit) {
 
         if (number.length() == level) {
-            result.addAll(words.stream().map(Arrays::asList).collect(Collectors.toList()));
-        } else {
-            int digit = number.charAt(level) - '0';
-            if (children[digit] != null) {
-                result.addAll(children[digit].findWords(number, level + 1, rootNode));
-            }
+            return words.stream().map(Arrays::asList).collect(Collectors.toList());
+        }
 
-            if (!words.isEmpty()) {
+        List<List<String>> result = new ArrayList<>();
+
+        int digit = number.charAt(level) - '0';
+        if (children[digit] != null) {
+            result.addAll(children[digit].findWords(number, level + 1, rootNode, skipOneDigit));
+        }
+
+        if (!words.isEmpty()) {
+            if (!skipOneDigit) {
                 result.addAll(crossJoinConcat(words.stream().map(Arrays::asList).collect(Collectors.toList()),
-                        rootNode.findWords(number.substring(level), 0, rootNode)));
+                        rootNode.findWords(number.substring(level), 0, rootNode, skipOneDigit)));
+            } else {
 
                 // allow skip one digit
                 result.addAll(crossJoinConcat(words.stream().map(word -> Arrays.asList(word, "" + digit))
                                 .collect(Collectors.toList()),
-                        rootNode.findWords(number.substring(level + 1), 0, rootNode)));
+                        rootNode.findWords(number.substring(level + 1), 0, rootNode, skipOneDigit)));
             }
         }
 

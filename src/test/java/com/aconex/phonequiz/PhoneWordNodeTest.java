@@ -110,9 +110,19 @@ public class PhoneWordNodeTest {
         root.addWord("AA", 0);
         root.addWord("BB", 0);
 
-        List<List<String>> result = root.findWords("22433", 0, root);
+        assertThat(root.findWords("22433", 0, root).size(), is(0));
+
+        List<List<String>> result = root.findWords("22433", 0, root, true);
         assertThat(result.size(), is(1));
         assertThat(result.get(0), hasItems("AA", "4", "BB"));
+    }
+
+    @Test
+    public void shouldNotGetErrorWhenMatchingEmptyNumber() {
+        root.addWord("AA", 0);
+        root.addWord("BB", 0);
+
+        assertThat(root.findWords("", 0, root).size(), is(0));
     }
 
 

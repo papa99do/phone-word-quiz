@@ -31,11 +31,34 @@ public class DictionaryTest {
     }
 
     @Test
-    public void shouldFindFindPhoneWords() {
+    public void shouldFindPhoneWords() {
         Dictionary dictionary = new Dictionary(words, dummyEncoding);
 
         List<String> results = dictionary.findPhoneWords("222.222");
 
-        assertThat(results, hasItems("AAAAAA", "AAA-AAA", "AA-2-AAA", "AAA-2-AA"));
+        assertThat(results, hasItems("AAAAAA", "AAA-AAA"));
+    }
+
+    @Test
+    public void shouldBeAbleToDealWithEmptyLineInDictionaryFile() {
+        Stream<String> words =Arrays.stream(new String[] {"aa", "", "#$%^&*"});
+        Dictionary dictionary = new Dictionary(words, dummyEncoding);
+
+        List<String> results = dictionary.findPhoneWords("22");
+        assertThat(results, hasItems("AA"));
+    }
+
+    @Test
+    public void shouldBeAbleToFindWordsWithSkippedDigit() {
+        Dictionary dictionary = new Dictionary(words, dummyEncoding);
+        List<String> results = dictionary.findPhoneWords("222322");
+        assertThat(results, hasItems("AAA-3-AA"));
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfNoMatchFound() {
+        Dictionary dictionary = new Dictionary(words, dummyEncoding);
+        List<String> results = dictionary.findPhoneWords("3333");
+        assertThat(results.size(), is(0));
     }
 }
